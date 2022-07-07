@@ -1,0 +1,40 @@
+----Settings----
+1. Создать новый 3D проект в Unity
+2. Edit -> Project Settings -> XR Plugin Management -> Install
+3. Скачать Open XR
+4. В найстройках OpenXR добавть Interaction Profiles:
+	HTC Vive Controller Profile
+	Oculus Touch Controller Profile
+5. Поставить Render Mode на Multi Pass
+6. Window -> Package Manager -> Packages: Unity Registry -> Скачать XR Interaction Toolkit
+7. Samples -> Import Starter Assets
+8. Assets -> Samples -> XR Interaction Toolkit -> 2.0.2 -> Starter Assets -> 
+	на всех пресетах нажать Add to default
+9. Edit -> Project Settings -> Preset Manager -> ActionBasedController ->
+	добавить фильтры "right" и "left" соответственно
+
+----Scene----
+1. В сцене создать 3D Object -> Plane
+2. В сцене создать XR -> XR Origin (Action-based)
+3. На XR Interaction Manager добавить скрипт Input Action Manager
+4. В скрипт добавить Action Assets -> XRI Default Input Actions
+5. У XR Origin поставить Y Position в 2
+
+// Project Settings -> XR Plug-in Management -> Установить Mock HMD Loader
+// Package Manager -> XR Interaction Toolkit -> XR Device Simulator
+// Добавить в сцену XR Device Simulator
+// Добавить кубы с размером 0.2 в LeftHand и RightHand контроллеры
+
+6. Добавить в сцену 3D Object -> Sphere, назвать VibrationSphere
+7. Добавить в кубы на руках Rigidbody и поставить IsKinematic и убрать UseGravity
+8. Поставить IsTrigger в Sphere Collider и добавить ей новый скрипт VibrationController
+9. Добавить в VibrationController
+	using UnityEngine.XR.Interaction.Toolkit;
+	...
+        private void OnTriggerEnter(Collider collider)
+        {
+            var handCube = collider.gameObject;
+            var controller = handCube.GetComponentInParent<ActionBasedController>();
+            controller.SendHapticImpulse(0.7f, 2);
+            Debug.Log($"Sent vibration to {controller.name}");
+        }
