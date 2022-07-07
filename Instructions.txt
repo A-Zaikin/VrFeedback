@@ -23,7 +23,7 @@
 // Project Settings -> XR Plug-in Management -> Установить Mock HMD Loader
 // Package Manager -> XR Interaction Toolkit -> XR Device Simulator
 // Добавить в сцену XR Device Simulator
-// Добавить кубы с размером 0.2 в LeftHand и RightHand контроллеры
+5. Добавить кубы с размером 0.2 в LeftHand и RightHand контроллеры
 
 6. Добавить в сцену 3D Object -> Sphere, назвать VibrationSphere
 7. Добавить в кубы на руках Rigidbody и поставить IsKinematic и убрать UseGravity
@@ -38,3 +38,26 @@
             controller.SendHapticImpulse(0.7f, 2);
             Debug.Log($"Sent vibration to {controller.name}");
         }
+
+10. Добавить в сцену 3D object -> Capsule, назвать SoundCapsule
+11. Capsule collider -> isTrigger включить
+12. Добавить компонент Audio Source у SoundCapsule
+13. Добавить ассет Audio Mixer
+14. Добавить Audio mixer в компонент Audio Source SoundCapsule
+15. Добавить аудиоклип(проигрываемый звук) в Audio Source SoundCapsule
+16. Добавить AudioListener у MainCamera
+17. Добавить скрипт AudioCapsule 
+public class SoundController : MonoBehaviour
+{
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        audioSource.Play();
+    }
+}
