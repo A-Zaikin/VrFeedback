@@ -1,7 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class FeedbackSource : MonoBehaviour
 {
+    [SerializeField] private Mode mode;
+    [SerializeField] private ImpulseMode impulseMode;
+    [SerializeField] private ContinuosMode continuosMode;
+    [SerializeField] private AmplitudeRollOffOverDistance amplitudeRollOffOverDistance;
+    [SerializeField] private float continuosModeFrequency;
+    [SerializeField] private AmplitudeRollOffOverVelocity amplitudeRollOffOverVelocity;
+    [SerializeField] private float distanceRollOffCoefficient;
+    [SerializeField] private float velocityRollOffCoefficient;
+
+    
     [SerializeField] private float amplitude;
     [SerializeField] private float duration;
     [SerializeField] private TargetControllers targetController;
@@ -18,7 +30,18 @@ public class FeedbackSource : MonoBehaviour
             };
             FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, duration);
         }
+        //if(mode == Mode.Impulse)
+        //{
+        //    SendImpulseFeedback();
+        //}
+
+        //if(mode == Mode.Continuos)
+        //{
+        //    SendContinuousFeedback();
+        //}
     }
+
+    
 
     private void OnTriggerEnter(Collider collider)
     {
@@ -34,5 +57,37 @@ public class FeedbackSource : MonoBehaviour
         Right,
         Both,
         BasedOnCollider
+    }
+
+    public enum Mode
+    {
+        Impulse,
+        Continuos
+    }
+
+    public enum ImpulseMode
+    {
+        Constant,
+        BellCurve
+    }
+
+    public enum ContinuosMode
+    {
+        Constant,
+        SineWave,
+        Square
+    }
+
+    public enum AmplitudeRollOffOverDistance
+    {
+        None,
+        Logarithmic,
+        Linear
+    }
+
+    public enum AmplitudeRollOffOverVelocity
+    {
+        None,
+        Linear
     }
 }
