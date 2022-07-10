@@ -18,7 +18,7 @@ public class FeedbackSourceEditor : Editor
     SerializedProperty duration;
     SerializedProperty targetController;
     SerializedProperty discreteFunctionStep;
-    bool modeFoldoutGroup;
+    bool modeFoldoutGroup = true;
 
     void OnEnable()
     {
@@ -40,7 +40,6 @@ public class FeedbackSourceEditor : Editor
     {
         serializedObject.Update();
         EditorGUILayout.PropertyField(amplitude);
-        EditorGUILayout.PropertyField(duration);
         EditorGUILayout.PropertyField(targetController);
         EditorGUILayout.PropertyField(discreteFunctionStep);
 
@@ -51,7 +50,7 @@ public class FeedbackSourceEditor : Editor
             EditorGUI.indentLevel++;
 
             EditorGUILayout.PropertyField(modeProperty);
-            if (modeProperty.intValue == (int)FeedbackSource.Mode.Continuos)
+            if (modeProperty.intValue == (int)FeedbackSource.Mode.Continuous)
             {
                 EditorGUILayout.PropertyField(continuousMode);
                 if (continuousMode.intValue != (int)FeedbackSource.ContinuousMode.Constant)
@@ -60,25 +59,11 @@ public class FeedbackSourceEditor : Editor
             }
             if (modeProperty.intValue == (int)FeedbackSource.Mode.Impulse)
             {
+                EditorGUILayout.PropertyField(duration);
                 EditorGUILayout.PropertyField(impulseMode);
             }
             EditorGUI.indentLevel = level;
         }
-
-        //EditorGUILayout.BeginFoldoutHeaderGroup(true, "Mode");
-        //EditorGUILayout.PropertyField(modeProperty);
-        //if(modeProperty.intValue == (int)FeedbackSource.Mode.Continuos)
-        //{
-        //    EditorGUILayout.PropertyField(continuosMode);
-        //    if (continuosMode.intValue != (int)FeedbackSource.ContinuosMode.Constant)
-        //        EditorGUILayout.PropertyField(continuosModeFrequency);
-
-        //}
-        //if(modeProperty.intValue == (int)FeedbackSource.Mode.Impulse)
-        //{
-        //    EditorGUILayout.PropertyField(impulseMode);
-        //}
-        //EditorGUILayout.EndFoldoutHeaderGroup();
 
 
         EditorGUILayout.PropertyField(amplitudeOverDistance);

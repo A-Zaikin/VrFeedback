@@ -105,6 +105,7 @@ public class FeedbackManager : MonoBehaviour
 
     public enum Controllers
     {
+        None,
         Left,
         Right,
         Both
