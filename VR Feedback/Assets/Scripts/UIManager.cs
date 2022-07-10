@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         var (leftVibration, rightVibration) = FeedbackManager.Instance.CurrentVibrationAmplitudes;
-        textMesh.text = $"Vibration\nleft: {leftVibration}\nright: {rightVibration}";
+        textMesh.text = $"Vibration" +
+            $"\nleft: {leftVibration.ToString("0.00")}" +
+            $"\nright: {rightVibration.ToString("0.00")}";
     }
 }

@@ -7,31 +7,33 @@ public class FeedbackSourceEditor : Editor
 {
     SerializedProperty modeProperty;
     SerializedProperty impulseMode;
-    SerializedProperty continuosMode;
-    SerializedProperty amplitudeRollOffOverDistance;
-    SerializedProperty continuosModeFrequency;
-    SerializedProperty amplitudeRollOffOverVelocity;
+    SerializedProperty continuousMode;
+    SerializedProperty amplitudeOverDistance;
+    SerializedProperty continuousModeFrequency;
+    SerializedProperty amplitudeOverVelocity;
     SerializedProperty distanceRollOffCoefficient;
     SerializedProperty velocityRollOffCoefficient;
 
     SerializedProperty amplitude;
     SerializedProperty duration;
     SerializedProperty targetController;
+    SerializedProperty discreteFunctionStep;
     bool modeFoldoutGroup;
 
     void OnEnable()
     {
         modeProperty = serializedObject.FindProperty("mode");
         impulseMode = serializedObject.FindProperty("impulseMode");
-        continuosMode = serializedObject.FindProperty("continuosMode");
-        amplitudeRollOffOverDistance = serializedObject.FindProperty("amplitudeRollOffOverDistance");
-        continuosModeFrequency = serializedObject.FindProperty("continuosModeFrequency");
-        amplitudeRollOffOverVelocity = serializedObject.FindProperty("amplitudeRollOffOverVelocity");
+        continuousMode = serializedObject.FindProperty("continuousMode");
+        amplitudeOverDistance = serializedObject.FindProperty("amplitudeOverDistance");
+        continuousModeFrequency = serializedObject.FindProperty("continuousModeFrequency");
+        amplitudeOverVelocity = serializedObject.FindProperty("amplitudeOverVelocity");
         distanceRollOffCoefficient = serializedObject.FindProperty("distanceRollOffCoefficient");
         velocityRollOffCoefficient = serializedObject.FindProperty("velocityRollOffCoefficient");
         amplitude = serializedObject.FindProperty("amplitude");
         duration = serializedObject.FindProperty("duration");
         targetController = serializedObject.FindProperty("targetController");
+        discreteFunctionStep = serializedObject.FindProperty("discreteFunctionStep");
     }
 
     public override void OnInspectorGUI()
@@ -40,6 +42,7 @@ public class FeedbackSourceEditor : Editor
         EditorGUILayout.PropertyField(amplitude);
         EditorGUILayout.PropertyField(duration);
         EditorGUILayout.PropertyField(targetController);
+        EditorGUILayout.PropertyField(discreteFunctionStep);
 
         modeFoldoutGroup = EditorGUILayout.Foldout(modeFoldoutGroup, "Mode");
         if (modeFoldoutGroup)
@@ -50,9 +53,9 @@ public class FeedbackSourceEditor : Editor
             EditorGUILayout.PropertyField(modeProperty);
             if (modeProperty.intValue == (int)FeedbackSource.Mode.Continuos)
             {
-                EditorGUILayout.PropertyField(continuosMode);
-                if (continuosMode.intValue != (int)FeedbackSource.ContinuosMode.Constant)
-                    EditorGUILayout.PropertyField(continuosModeFrequency);
+                EditorGUILayout.PropertyField(continuousMode);
+                if (continuousMode.intValue != (int)FeedbackSource.ContinuousMode.Constant)
+                    EditorGUILayout.PropertyField(continuousModeFrequency);
 
             }
             if (modeProperty.intValue == (int)FeedbackSource.Mode.Impulse)
@@ -78,13 +81,13 @@ public class FeedbackSourceEditor : Editor
         //EditorGUILayout.EndFoldoutHeaderGroup();
 
 
-        EditorGUILayout.PropertyField(amplitudeRollOffOverDistance);
-        if(amplitudeRollOffOverDistance.intValue != (int)FeedbackSource.AmplitudeRollOffOverDistance.None)
+        EditorGUILayout.PropertyField(amplitudeOverDistance);
+        if(amplitudeOverDistance.intValue != (int)FeedbackSource.AmplitudeOverDistance.None)
         {
             EditorGUILayout.PropertyField(distanceRollOffCoefficient);
         }
-        EditorGUILayout.PropertyField(amplitudeRollOffOverVelocity);
-        if(amplitudeRollOffOverVelocity.intValue != (int)FeedbackSource.AmplitudeRollOffOverVelocity.None)
+        EditorGUILayout.PropertyField(amplitudeOverVelocity);
+        if(amplitudeOverVelocity.intValue != (int)FeedbackSource.AmplitudeOverVelocity.None)
         {
             EditorGUILayout.PropertyField (velocityRollOffCoefficient);
         }

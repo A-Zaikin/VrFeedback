@@ -443,16 +443,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  impulseMode: 0
-  continuosMode: 1
-  amplitudeRollOffOverDistance: 0
-  continuosModeFrequency: 0
-  amplitudeRollOffOverVelocity: 0
+  impulseMode: 1
+  continuousMode: 1
+  continuousModeFrequency: 1
+  amplitudeOverDistance: 0
   distanceRollOffCoefficient: 0
+  amplitudeOverVelocity: 0
   velocityRollOffCoefficient: 0
-  amplitude: 0
-  duration: 0
-  targetController: 0
+  amplitude: 0.7
+  duration: 2
+  targetController: 3
+  discreteFunctionStep: 0.02
 --- !u!1 &80610638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1483,15 +1484,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 0
   impulseMode: 0
-  continuosMode: 0
-  amplitudeRollOffOverDistance: 0
-  continuosModeFrequency: 0
-  amplitudeRollOffOverVelocity: 0
+  continuousMode: 0
+  continuousModeFrequency: 0
+  amplitudeOverDistance: 0
   distanceRollOffCoefficient: 0
+  amplitudeOverVelocity: 0
   velocityRollOffCoefficient: 0
   amplitude: 0.5
   duration: 0.5
   targetController: 3
+  discreteFunctionStep: 0
 --- !u!1 &1128264064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,7 +1573,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158583371}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.449, y: 0, z: 2.295}
+  m_LocalPosition: {x: 0.885, y: 0, z: 2.092}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

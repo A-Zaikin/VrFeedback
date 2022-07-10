@@ -34,17 +34,19 @@ public class FeedbackManager : MonoBehaviour
         }
     }
 
-    public void SendHapticImpulseToCollider(Collider collider, float amplitude, float duration)
+    public bool TryGetController(Collider collider, out Controllers controller)
     {
-        var newVibration = new Vibration(amplitude, duration, Time.time);
+        controller = Controllers.Left;
         if (collider == leftHandCollider)
         {
-            currentLeftVibrations.Add(newVibration);
+            return true;
         }
-        if (collider == rightHandCollider)
+        else if (collider == rightHandCollider)
         {
-            currentRightVibrations.Add(newVibration);
+            controller = Controllers.Right;
+            return true;
         }
+        return false;
     }
 
     private void Awake()
