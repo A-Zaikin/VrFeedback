@@ -10,8 +10,9 @@ public class FeedbackManager : MonoBehaviour
     [SerializeField] private ActionBasedController rightController;
     [SerializeField] private Collider rightHandCollider;
 
+    [SerializeField] private float sensitivity;
     [SerializeField] private int framesPerHapticCall;
-    [SerializeField] private float timeBetweenHapticCalls;
+    [SerializeField] private float msBetweenHapticCalls;
     [SerializeField] private float discreteFunctionStep;
 
     private List<Vibration> currentLeftVibrations;
@@ -80,7 +81,7 @@ public class FeedbackManager : MonoBehaviour
     private void Update()
     {
         framesSinceLastHapticCall++;
-        if (framesSinceLastHapticCall >= framesPerHapticCall || framesPerHapticCall == 0)
+        if (framesSinceLastHapticCall >= framesPerHapticCall)
         {
             RemoveEndedVibrations(currentLeftVibrations);
             RemoveEndedVibrations(currentRightVibrations);
@@ -88,15 +89,17 @@ public class FeedbackManager : MonoBehaviour
             //var currentLeftVibrations = this.currentLeftVibrations.ToList();
             //var currentRightVibrations = this.currentRightVibrations.ToList();
 
-            var duration = framesPerHapticCall == 0
-                ? timeBetweenHapticCalls / 1000
-                : Time.deltaTime * framesPerHapticCall;
+            var duration = msBetweenHapticCalls < 0
+                ? Time.deltaTime * framesPerHapticCall
+                : msBetweenHapticCalls / 1000;
             var leftMaxAmplitude = currentLeftVibrations.Count > 0
                 ? currentLeftVibrations.Max(vibration => vibration.Amplitude)
                 : 0;
             var rightMaxAmplitude = currentRightVibrations.Count > 0
                 ? currentRightVibrations.Max(vibration => vibration.Amplitude)
                 : 0;
+            leftMaxAmplitude = Mathf.Min(leftMaxAmplitude * sensitivity, 1);
+            rightMaxAmplitude = Mathf.Min(rightMaxAmplitude * sensitivity, 1);
             CurrentVibrationAmplitudes = (leftMaxAmplitude, rightMaxAmplitude);
 
             leftController.SendHapticImpulse(leftMaxAmplitude, duration);

@@ -21,6 +21,7 @@ public class FeedbackSource : MonoBehaviour
     [SerializeField] private TargetControllers targetController;
 
     private List<ContinuousVibration> continuousVibrations;
+    private Rigidbody rigidbody;
 
     public Mode CurrentMode { get => mode; }
 
@@ -107,7 +108,7 @@ public class FeedbackSource : MonoBehaviour
         var coroutineToStop = continuousVibrations.Find(vibration => vibration.id == id);
         continuousVibrations.Remove(coroutineToStop);
         StopCoroutine(coroutineToStop.coroutine);
-        if(audioSource == null)
+        if(audioSource != null)
         {
             audioSource.Stop();
             audioSource.loop = false;
@@ -122,7 +123,7 @@ public class FeedbackSource : MonoBehaviour
             continuousVibrations.Remove(coroutineToStop);
             StopCoroutine(coroutineToStop.coroutine);
         }
-        if (audioSource == null)
+        if (audioSource != null)
         {
             audioSource.Stop();
             audioSource.loop = false;
@@ -157,7 +158,7 @@ public class FeedbackSource : MonoBehaviour
         var discreteFunctionStep = FeedbackManager.Instance.DiscreteFunctionStep;
         for (var x = 0f; x < Mathf.PI; x += Mathf.PI * discreteFunctionStep / duration)
         {
-            var amplitude = GetDistanceCoefficient(controller) * Mathf.Sin(x) * this.amplitude;
+            var amplitude = Mathf.Sin(x) * this.amplitude;
             FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
         }
@@ -169,7 +170,7 @@ public class FeedbackSource : MonoBehaviour
         while (true)
         {
             FeedbackManager.Instance.SendHapticImpulse(controller,
-                GetDistanceCoefficient(controller) * amplitude, discreteFunctionStep);
+                GetDistanceCoefficient(controller) * GetVelocityCoefficient() * amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
         }
     }
@@ -198,9 +199,21 @@ public class FeedbackSource : MonoBehaviour
         return distanceCoefficient;
     }
 
+    private float GetVelocityCoefficient()
+    {
+        if (rigidbody == null)
+            return 1;
+        var velocityCoefficient = amplitudeOverVelocity == AmplitudeOverVelocity.Linear
+            ? rigidbody.velocity.magnitude * velocityRollOffCoefficient
+            : 1;
+        velocityCoefficient = Mathf.Min(velocityCoefficient, 1);
+        return velocityCoefficient;
+    }
+
     private void Awake()
     {
         continuousVibrations = new List<ContinuousVibration>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     public enum TargetControllers
