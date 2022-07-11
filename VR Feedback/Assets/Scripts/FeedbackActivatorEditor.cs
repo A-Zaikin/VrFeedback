@@ -38,7 +38,7 @@ public class FeedbackActivatorEditor : Editor
         
 
         
-        impulseToggle = EditorGUILayout.BeginToggleGroup("", impulseToggle);
+        impulseToggle = EditorGUILayout.BeginToggleGroup("Impulse Mode", impulseToggle);
         if (impulseToggle)
         {
             EditorGUILayout.PropertyField(onTriggerEnter);
@@ -46,7 +46,7 @@ public class FeedbackActivatorEditor : Editor
         }
         EditorGUILayout.EndToggleGroup();
 
-        continuousToggle = EditorGUILayout.BeginToggleGroup("", continuousToggle);
+        continuousToggle = EditorGUILayout.BeginToggleGroup("Continuous Mode", continuousToggle);
         if (continuousToggle)
         {
             EditorGUILayout.PropertyField(onColliderStay);

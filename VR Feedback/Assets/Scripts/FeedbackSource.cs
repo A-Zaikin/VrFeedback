@@ -14,7 +14,7 @@ public class FeedbackSource : MonoBehaviour
     [SerializeField] private float distanceRollOffCoefficient;
     [SerializeField] private AmplitudeOverVelocity amplitudeOverVelocity;
     [SerializeField] private float velocityRollOffCoefficient;
-    
+
     [SerializeField] private float amplitude;
     [SerializeField] private float duration;
     [SerializeField] private TargetControllers targetController;
@@ -23,9 +23,6 @@ public class FeedbackSource : MonoBehaviour
     private List<ContinuousVibration> continuousVibrations;
 
     public Mode CurrentMode { get => mode; }
-    
-
-    private Coroutine continuousCoroutine;
 
     public void SendFeedback(Collider collider = null)
     {
@@ -60,7 +57,7 @@ public class FeedbackSource : MonoBehaviour
             }
         }
 
-        
+
     }
     /// <summary>
     /// 
@@ -73,16 +70,13 @@ public class FeedbackSource : MonoBehaviour
         var vibrationsList = continuousVibrations.ToList();
         var vibration = new ContinuousVibration();
         int id = 0;
+
         if (mode == Mode.Continuous)
         {
-            if (continuousMode == ContinuousMode.Constant)
-            {
-                continuousCoroutine = StartCoroutine(ConstantCoroutine(controller));
-            }
-            if (continuousMode == ContinuousMode.SineWave)
-            {
-                continuousCoroutine = StartCoroutine(SineWaveCoroutine(controller));
-            }
+            Coroutine continuousCoroutine = continuousMode == ContinuousMode.Constant
+                ? StartCoroutine(ConstantCoroutine(controller))
+                : StartCoroutine(SineWaveCoroutine(controller));
+
             vibration.coroutine = continuousCoroutine;
             vibration.collider = collider;
         }
@@ -94,8 +88,10 @@ public class FeedbackSource : MonoBehaviour
             {
                 id = idbuffer;
                 vibration.id = id;
+                idFound = true;
             }
         }
+        continuousVibrations.Add(vibration);
         return id;
     }
 
@@ -104,6 +100,16 @@ public class FeedbackSource : MonoBehaviour
         var coroutineToStop = continuousVibrations.Find(vibration => vibration.id == id);
         continuousVibrations.Remove(coroutineToStop);
         StopCoroutine(coroutineToStop.coroutine);
+    }
+
+    public void EndContinuousFeedback(Collider collider)
+    {
+        var coroutinesToStop = continuousVibrations.FindAll(vibration => vibration.collider == collider);
+        foreach (var coroutineToStop in coroutinesToStop)
+        {
+            continuousVibrations.Remove(coroutineToStop);
+            StopCoroutine(coroutineToStop.coroutine);
+        }
     }
 
     private FeedbackManager.Controllers GetControllers(Collider collider = null)
@@ -140,7 +146,7 @@ public class FeedbackSource : MonoBehaviour
 
     private IEnumerator ConstantCoroutine(FeedbackManager.Controllers controller)
     {
-        while(true)
+        while (true)
         {
             FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
@@ -159,10 +165,10 @@ public class FeedbackSource : MonoBehaviour
         }
     }
 
-    //private void OnTriggerEnter(Collider collider)
-    //{
-    //    SendFeedback(collider);
-    //}
+    private void Awake()
+    {
+        continuousVibrations = new List<ContinuousVibration>();
+    }
 
     public enum TargetControllers
     {
@@ -211,8 +217,8 @@ public class FeedbackSource : MonoBehaviour
         public Collider collider;
 
         public ContinuousVibration()
-        { 
-        
+        {
+
         }
 
         public ContinuousVibration(Coroutine coroutine, int id, Collider collider)
@@ -221,5 +227,6 @@ public class FeedbackSource : MonoBehaviour
             this.id = id;
             this.collider = collider;
         }
+
     }
 }

@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0614a19910cd7694ca553f42cae6dedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
+  mode: 1
   impulseMode: 1
   continuousMode: 1
   continuousModeFrequency: 1
@@ -470,7 +470,7 @@ MonoBehaviour:
   feedbackSource: {fileID: 42907492}
   onTriggerEnter: 0
   onTriggerExit: 0
-  onColliderStay: 0
+  onColliderStay: 1
 --- !u!1 &80610638
 GameObject:
   m_ObjectHideFlags: 0

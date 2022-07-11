@@ -91,9 +91,9 @@ public class FeedbackManager : MonoBehaviour
         }
 
 
-        void RemoveEndedVibrations(List<Vibration> currentVibrations) 
+        void RemoveEndedVibrations(List<Vibration> currentVibrations)
         {
-            for (var i = 0; i < currentVibrations.Count; i++) 
+            for (var i = 0; i < currentVibrations.Count; i++)
             {
                 if (Time.time - currentVibrations[i].StartTime > currentVibrations[i].Duration)
                 {

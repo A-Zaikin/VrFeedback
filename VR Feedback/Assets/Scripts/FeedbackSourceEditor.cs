@@ -67,14 +67,14 @@ public class FeedbackSourceEditor : Editor
 
 
         EditorGUILayout.PropertyField(amplitudeOverDistance);
-        if(amplitudeOverDistance.intValue != (int)FeedbackSource.AmplitudeOverDistance.None)
+        if (amplitudeOverDistance.intValue != (int)FeedbackSource.AmplitudeOverDistance.None)
         {
             EditorGUILayout.PropertyField(distanceRollOffCoefficient);
         }
         EditorGUILayout.PropertyField(amplitudeOverVelocity);
-        if(amplitudeOverVelocity.intValue != (int)FeedbackSource.AmplitudeOverVelocity.None)
+        if (amplitudeOverVelocity.intValue != (int)FeedbackSource.AmplitudeOverVelocity.None)
         {
-            EditorGUILayout.PropertyField (velocityRollOffCoefficient);
+            EditorGUILayout.PropertyField(velocityRollOffCoefficient);
         }
         serializedObject.ApplyModifiedProperties();
         //base.OnInspectorGUI();
