@@ -5,6 +5,7 @@ using System.Linq;
 
 public class FeedbackSource : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private Mode mode;
     [SerializeField] private ImpulseMode impulseMode;
     [SerializeField] private ContinuousMode continuousMode;
@@ -55,8 +56,10 @@ public class FeedbackSource : MonoBehaviour
                 StartCoroutine(SingleSineCurveCoroutine(controller));
             }
         }
-
-
+        if(audioSource != null)
+        {
+            audioSource.Play();
+        }
     }
     /// <summary>
     /// 
@@ -91,6 +94,11 @@ public class FeedbackSource : MonoBehaviour
             }
         }
         continuousVibrations.Add(vibration);
+        if(audioSource != null)
+        {
+            audioSource.loop = true;
+            audioSource.Play();
+        }
         return id;
     }
 
@@ -99,6 +107,11 @@ public class FeedbackSource : MonoBehaviour
         var coroutineToStop = continuousVibrations.Find(vibration => vibration.id == id);
         continuousVibrations.Remove(coroutineToStop);
         StopCoroutine(coroutineToStop.coroutine);
+        if(audioSource == null)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
+        }
     }
 
     public void EndContinuousFeedback(Collider collider)
@@ -108,6 +121,11 @@ public class FeedbackSource : MonoBehaviour
         {
             continuousVibrations.Remove(coroutineToStop);
             StopCoroutine(coroutineToStop.coroutine);
+        }
+        if (audioSource == null)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
         }
     }
 

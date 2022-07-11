@@ -15,7 +15,9 @@ public class FeedbackActivator : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (onTriggerEnter)
+        {
             feedbackSource.SendFeedback(other);
+        }
         if (onColliderStay)
         {
             feedbackSource.StartContinuousFeedback(other);

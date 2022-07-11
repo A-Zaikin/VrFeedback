@@ -17,7 +17,9 @@ public class FeedbackSourceEditor : Editor
     SerializedProperty amplitude;
     SerializedProperty duration;
     SerializedProperty targetController;
+    SerializedProperty audioSource;
     bool modeFoldoutGroup = true;
+    bool vibrationFoldoutGroup = true;
 
     void OnEnable()
     {
@@ -32,46 +34,52 @@ public class FeedbackSourceEditor : Editor
         amplitude = serializedObject.FindProperty("amplitude");
         duration = serializedObject.FindProperty("duration");
         targetController = serializedObject.FindProperty("targetController");
+        audioSource = serializedObject.FindProperty("audioSource");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        EditorGUILayout.PropertyField(amplitude);
-        EditorGUILayout.PropertyField(targetController);
-
-        modeFoldoutGroup = EditorGUILayout.Foldout(modeFoldoutGroup, "Mode");
-        if (modeFoldoutGroup)
+        EditorGUILayout.PropertyField(audioSource);
+        vibrationFoldoutGroup = EditorGUILayout.Foldout(vibrationFoldoutGroup, "Vibration");
+        if (vibrationFoldoutGroup)
         {
-            var level = EditorGUI.indentLevel;
-            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(amplitude);
+            EditorGUILayout.PropertyField(targetController);
 
-            EditorGUILayout.PropertyField(modeProperty);
-            if (modeProperty.intValue == (int)FeedbackSource.Mode.Continuous)
+            modeFoldoutGroup = EditorGUILayout.Foldout(modeFoldoutGroup, "Mode");
+            if (modeFoldoutGroup)
             {
-                EditorGUILayout.PropertyField(continuousMode);
-                if (continuousMode.intValue != (int)FeedbackSource.ContinuousMode.Constant)
-                    EditorGUILayout.PropertyField(continuousModeFrequency);
+                var level = EditorGUI.indentLevel;
+                EditorGUI.indentLevel++;
 
+                EditorGUILayout.PropertyField(modeProperty);
+                if (modeProperty.intValue == (int)FeedbackSource.Mode.Continuous)
+                {
+                    EditorGUILayout.PropertyField(continuousMode);
+                    if (continuousMode.intValue != (int)FeedbackSource.ContinuousMode.Constant)
+                        EditorGUILayout.PropertyField(continuousModeFrequency);
+
+                }
+                if (modeProperty.intValue == (int)FeedbackSource.Mode.Impulse)
+                {
+                    EditorGUILayout.PropertyField(duration);
+                    EditorGUILayout.PropertyField(impulseMode);
+                }
+                EditorGUI.indentLevel = level;
             }
-            if (modeProperty.intValue == (int)FeedbackSource.Mode.Impulse)
+
+
+            EditorGUILayout.PropertyField(amplitudeOverDistance);
+            if (amplitudeOverDistance.intValue != (int)FeedbackSource.AmplitudeOverDistance.None)
             {
-                EditorGUILayout.PropertyField(duration);
-                EditorGUILayout.PropertyField(impulseMode);
+                EditorGUILayout.PropertyField(distanceRollOffCoefficient);
             }
-            EditorGUI.indentLevel = level;
-        }
-
-
-        EditorGUILayout.PropertyField(amplitudeOverDistance);
-        if (amplitudeOverDistance.intValue != (int)FeedbackSource.AmplitudeOverDistance.None)
-        {
-            EditorGUILayout.PropertyField(distanceRollOffCoefficient);
-        }
-        EditorGUILayout.PropertyField(amplitudeOverVelocity);
-        if (amplitudeOverVelocity.intValue != (int)FeedbackSource.AmplitudeOverVelocity.None)
-        {
-            EditorGUILayout.PropertyField(velocityRollOffCoefficient);
+            EditorGUILayout.PropertyField(amplitudeOverVelocity);
+            if (amplitudeOverVelocity.intValue != (int)FeedbackSource.AmplitudeOverVelocity.None)
+            {
+                EditorGUILayout.PropertyField(velocityRollOffCoefficient);
+            }
         }
         serializedObject.ApplyModifiedProperties();
         //base.OnInspectorGUI();
