@@ -17,7 +17,6 @@ public class FeedbackSourceEditor : Editor
     SerializedProperty amplitude;
     SerializedProperty duration;
     SerializedProperty targetController;
-    SerializedProperty discreteFunctionStep;
     bool modeFoldoutGroup = true;
 
     void OnEnable()
@@ -33,7 +32,6 @@ public class FeedbackSourceEditor : Editor
         amplitude = serializedObject.FindProperty("amplitude");
         duration = serializedObject.FindProperty("duration");
         targetController = serializedObject.FindProperty("targetController");
-        discreteFunctionStep = serializedObject.FindProperty("discreteFunctionStep");
     }
 
     public override void OnInspectorGUI()
@@ -41,7 +39,6 @@ public class FeedbackSourceEditor : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(amplitude);
         EditorGUILayout.PropertyField(targetController);
-        EditorGUILayout.PropertyField(discreteFunctionStep);
 
         modeFoldoutGroup = EditorGUILayout.Foldout(modeFoldoutGroup, "Mode");
         if (modeFoldoutGroup)

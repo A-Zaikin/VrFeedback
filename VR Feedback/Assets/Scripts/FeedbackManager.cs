@@ -12,6 +12,7 @@ public class FeedbackManager : MonoBehaviour
 
     [SerializeField] private int framesPerHapticCall;
     [SerializeField] private float timeBetweenHapticCalls;
+    [SerializeField] private float discreteFunctionStep;
 
     private List<Vibration> currentLeftVibrations;
     private List<Vibration> currentRightVibrations;
@@ -20,6 +21,8 @@ public class FeedbackManager : MonoBehaviour
     public static FeedbackManager Instance { get; private set; }
 
     public (float, float) CurrentVibrationAmplitudes { get; private set; }
+
+    public float DiscreteFunctionStep { get => discreteFunctionStep; }
 
     public void SendHapticImpulse(Controllers controller, float amplitude, float duration)
     {
@@ -47,6 +50,18 @@ public class FeedbackManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public Vector3 GetPosition(Controllers controller)
+    {
+        if (controller == Controllers.Left)
+        {
+            return leftHandCollider.transform.position;
+        }
+        else
+        {
+            return rightHandCollider.transform.position;
+        }
     }
 
     private void Awake()

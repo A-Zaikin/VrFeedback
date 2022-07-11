@@ -18,7 +18,6 @@ public class FeedbackSource : MonoBehaviour
     [SerializeField] private float amplitude;
     [SerializeField] private float duration;
     [SerializeField] private TargetControllers targetController;
-    [SerializeField] private float discreteFunctionStep;
 
     private List<ContinuousVibration> continuousVibrations;
 
@@ -137,18 +136,22 @@ public class FeedbackSource : MonoBehaviour
 
     private IEnumerator SingleSineCurveCoroutine(FeedbackManager.Controllers controller)
     {
+        var discreteFunctionStep = FeedbackManager.Instance.DiscreteFunctionStep;
         for (var x = 0f; x < Mathf.PI; x += Mathf.PI * discreteFunctionStep / duration)
         {
-            FeedbackManager.Instance.SendHapticImpulse(controller, Mathf.Sin(x) * amplitude, discreteFunctionStep);
+            var amplitude = GetDistanceCoefficient(controller) * Mathf.Sin(x) * this.amplitude;
+            FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
         }
     }
 
     private IEnumerator ConstantCoroutine(FeedbackManager.Controllers controller)
     {
+        var discreteFunctionStep = FeedbackManager.Instance.DiscreteFunctionStep;
         while (true)
         {
-            FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, discreteFunctionStep);
+            FeedbackManager.Instance.SendHapticImpulse(controller,
+                GetDistanceCoefficient(controller) * amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
         }
     }
@@ -156,13 +159,25 @@ public class FeedbackSource : MonoBehaviour
     private IEnumerator SineWaveCoroutine(FeedbackManager.Controllers controller)
     {
         var x = 0f;
+        var discreteFunctionStep = FeedbackManager.Instance.DiscreteFunctionStep;
         while (true)
         {
             x += (Mathf.PI * discreteFunctionStep / continuousModeFrequency) % Mathf.PI;
-            var amplitude = this.amplitude * (Mathf.Sin(x) / 2 + 0.5f);
+            var amplitude = this.amplitude * (Mathf.Sin(x) / 2 + 0.5f) * GetDistanceCoefficient(controller);
             FeedbackManager.Instance.SendHapticImpulse(controller, amplitude, discreteFunctionStep);
             yield return new WaitForSecondsRealtime(discreteFunctionStep);
         }
+    }
+
+    private float GetDistanceCoefficient(FeedbackManager.Controllers controller)
+    {
+        var distanceToController = Vector3.Distance(transform.position,
+            FeedbackManager.Instance.GetPosition(controller));
+        var distanceCoefficient = amplitudeOverDistance == AmplitudeOverDistance.Linear
+            ? distanceRollOffCoefficient / distanceToController
+            : 1;
+        distanceCoefficient = Mathf.Min(distanceCoefficient, 1);
+        return distanceCoefficient;
     }
 
     private void Awake()
